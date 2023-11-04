@@ -6,7 +6,7 @@ param(
 
 #iex "& { $(iwr https://raw.githubusercontent.com/PhilipRieck/MachineSetup/main/Go.ps1) }" | Out-Null
 
-#Import modules from the local libs
+
 
 #Create folders
 $aspireDir = Join-Path $devDrive "dev"

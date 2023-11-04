@@ -1,3 +1,6 @@
+#Import modules from the local libs
+import-module "$PSScriptRoot\..\Modules\Registry.psm1"
+
 
 #Fix Explorer in win 11 22h2 to what Philip likes
 
