@@ -11,7 +11,7 @@ Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explore
 Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "Hidden" -Data 1 -Type DWord > $null
 
 #Show full path in title bar
-Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetState" -Name "FullPath" -Data "top" -Type String > $null
+Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetState" -Name "FullPath" -Data 1 -Type DWord > $null
 
 #Remove pop-up descriptions
 Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowInfoTip" -Data 0 -Type DWord > $null
@@ -23,7 +23,7 @@ set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explore
 Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "LaunchTo" -Data 1 -Type DWord > $null
 
 #Disable sharing wizard
-Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "SharingWizardOn" -Data 1 -Type DWord > $null
+Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "SharingWizardOn" -Data 0 -Type DWord > $null
 
 
 
@@ -42,7 +42,7 @@ Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explore
 Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarDa" -Data 0 -Type DWord > $null
 
 #Remove search bar from taskbar
-Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "SearchboxTaskBarMode" -Data 0 -Type DWord > $null
+Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskBarMode" -Data 0 -Type DWord > $null
 
 #Set windows darkmode
 Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "SystemUsesLightTheme" -Data 0 -Type DWord > $null
@@ -59,5 +59,9 @@ Remove-Item C:\Users\public\Desktop\*.lnk -Force -Verbose
 set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers" -Name "BackgroundType" -Data 1 -Type DWord > $null
 Set-RegistryValue -Path "HKCU:\Control Panel\Desktop" -Name "Wallpaper" -Data "" -Type String > $null
 Set-RegistryValue -Path "HKCU:\Control Panel\Colors" -Name "Background" -Data "0 0 0" -Type String > $null
+
+
+#Reload explorer
+Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue
 
 

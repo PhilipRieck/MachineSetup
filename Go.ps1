@@ -1,4 +1,6 @@
-#iex "& { $(iwr https://raw.githubusercontent.com/PhilipRieck/MachineSetup/main/Go.ps1) }" | Out-Null
+#0. Start powershell as admin
+#1. Set-executionpolicy unrestricted
+#2. iex "& { $(iwr https://raw.githubusercontent.com/PhilipRieck/MachineSetup/main/Go.ps1) }" | Out-Null
 
 $TempDir = "$env:TEMP\MachineSetup"
 Remove-Item $TempDir -Recurse -Force -ErrorAction SilentlyContinue
