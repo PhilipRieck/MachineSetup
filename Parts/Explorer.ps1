@@ -48,8 +48,9 @@ Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search"
 Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "SystemUsesLightTheme" -Data 0 -Type DWord > $null
 Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -Data 1 -Type DWord > $null
 
-#Hide Recycle Bin
-Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" -Name "{645FF040-5081-101B-9F08-00AA002F954E}" -Data 0 -Type DWord > $null
+#Hide desktop icons
+Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideIcons" -Data 1 -Type DWord > $null
+
 
 #Remove icons from desktop
 Remove-Item C:\Users\$env:USERNAME\Desktop\*.lnk -Force -Verbose
