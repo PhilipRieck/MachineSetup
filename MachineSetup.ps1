@@ -1,7 +1,7 @@
 param(
     [switch] $AspireTooling = $true,
     [switch] $vNextTooling = $true,
-    [string] $devDrive = "C:",
+    [string] $devDrive = "C:"
 )
 
 #iex "& { $(iwr https://raw.githubusercontent.com/PhilipRieck/MachineSetup/main/Go.ps1) }" | Out-Null
