@@ -4,6 +4,7 @@ param(
     [string] $devDrive = "C:",
 )
 
+#iex "& { $(iwr https://raw.githubusercontent.com/PhilipRieck/MachineSetup/main/Go.ps1) }" | Out-Null
 
 #Import modules from the local libs
 
