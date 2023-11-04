@@ -13,10 +13,10 @@ $aspireDir = Join-Path $devDrive "dev"
 $vNextDir = Join-Path $devDrive "vNext"
 
 if($AspireTooling){
-   New-Item -Path $aspireDir -ItemType directory
+   New-Item -Path $aspireDir -ItemType directory -ErrorAction SilentlyContinue
 }
 if($vNextTooling){
-    New-Item -Path $vNextDir -ItemType directory
+    New-Item -Path $vNextDir -ItemType directory -ErrorAction SilentlyContinue
 }
 
 
