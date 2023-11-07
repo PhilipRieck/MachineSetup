@@ -53,8 +53,8 @@ Set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explore
 
 
 #Remove icons from desktop
-Remove-Item C:\Users\$env:USERNAME\Desktop\*.lnk -Force -Verbose
-Remove-Item C:\Users\public\Desktop\*.lnk -Force -Verbose
+Remove-Item C:\Users\$env:USERNAME\Desktop\*.lnk -Force
+Remove-Item C:\Users\public\Desktop\*.lnk -Force
 
 #Set background to solid color
 set-RegistryValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Wallpapers" -Name "BackgroundType" -Data 1 -Type DWord > $null
