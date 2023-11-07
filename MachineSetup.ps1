@@ -4,17 +4,17 @@ param(
 
 
 #First, do we need to install pwsh version 7.4?
-$target = [semver]"7.4.0-rc.1"
+$target = "7.4.0-rc.1"
 $pwshFile = "PowerShell-7.4.0-rc.1-win-x64.msi"
 $pwshUri = "https://github.com/PowerShell/PowerShell/releases/download/v7.4.0-rc.1/$pwshFile"
 $pwshTemp = join-path "$env:TEMP" "$pwshFile"
 
 $needsInstall = $false
 if(get-command pwsh -ErrorAction SilentlyContinue){
-    $needsInstall = $true
-} else {
     $installedVal = pwsh -noprofile -command "((Get-Variable PSVersionTable -ValueOnly).PSVersion -ge [semver]'$($target)')"
-    $needsInstall = $installedVal -eq $false
+    $needsInstall = -not ($installedVal -eq $true)
+} else {
+    $needsInstall = $true
 }
 
 if($needsInstall){
