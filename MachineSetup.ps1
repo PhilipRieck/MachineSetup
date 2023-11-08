@@ -22,7 +22,7 @@ if($needsInstall){
     Write-Host "Installing PowerShell $target"
 
     Invoke-WebRequest -Uri $pwshUri -OutFile $pwshTemp
-    Start-Process msiexec.exe -Wait -ArgumentList "/i $pwshTemp /quiet /norestart"
+    Start-Process msiexec.exe -Wait -ArgumentList "/i $pwshTemp /quiet /norestart REGISTER_MANIFEST=1 USE_MU=1 ENABLE_MU=1 ADD_PATH=1"
 }
 
 #Now, run the phases as admin
