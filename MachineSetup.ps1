@@ -19,7 +19,7 @@ if(get-command pwsh -ErrorAction SilentlyContinue){
 
 if($needsInstall){
     #Upgrade powershell to 7.4 (rc1 at time of writing)
-    Write-Host "Installing PowerShell $target"
+    Write-Host "Installing PowerShell $target adding to path"
 
     Invoke-WebRequest -Uri $pwshUri -OutFile $pwshTemp
     Start-Process msiexec.exe -Wait -ArgumentList "/i $pwshTemp /quiet /norestart REGISTER_MANIFEST=1 USE_MU=1 ENABLE_MU=1 ADD_PATH=1"
