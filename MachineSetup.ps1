@@ -10,8 +10,8 @@ $pwshUri = "https://github.com/PowerShell/PowerShell/releases/download/v7.4.0-rc
 $pwshTemp = join-path "$env:TEMP" "$pwshFile"
 
 $needsInstall = $false
-if(get-command pwsh -ErrorAction SilentlyContinue){
-    $installedVal = pwsh -noprofile -command "((Get-Variable PSVersionTable -ValueOnly).PSVersion -ge [semver]'$($target)')"
+if(get-command pwsh-preview -ErrorAction SilentlyContinue){
+    $installedVal = pwsh-preview -noprofile -command "((Get-Variable PSVersionTable -ValueOnly).PSVersion -ge [semver]'$($target)')"
     $needsInstall = -not ($installedVal -eq $true)
 } else {
     $needsInstall = $true
@@ -31,4 +31,4 @@ if($needsInstall){
 
 #Now, run the phases as admin
 $psArgs = "-File $PSScriptRoot\RunPhase.ps1"
-Start-Process pwsh -Wait -Verb RunAs -ArgumentList $psArgs
+Start-Process pwsh-preview -Wait -Verb RunAs -ArgumentList $psArgs
