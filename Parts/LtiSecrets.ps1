@@ -10,8 +10,8 @@ if($module -eq $null){
 
 $vault = Get-SecretVault -Name LtiSecrets -ErrorAction Ignore
 if($vault -eq $null){
-    Register-SecretVault -Name LtiSecrets -ModuleName Microsoft.PowerShell.SecretStore
     Set-SecretStoreConfiguration -Authentication None -Interaction None
+    Register-SecretVault -Name LtiSecrets -ModuleName Microsoft.PowerShell.SecretStore
 }
 
 #Allow getting secrets from LtiSecrets vault without prompting

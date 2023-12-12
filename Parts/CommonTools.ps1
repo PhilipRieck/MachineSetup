@@ -1,4 +1,4 @@
-Import-Module "$PSScriptRoot\Modules\Packages.psm1"
+Import-Module "$PSScriptRoot\..\Modules\Packages.psm1"
 
 
 #Git
