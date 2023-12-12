@@ -8,42 +8,33 @@ if(-not $isAdmin){
 }
 
 
-#This part should return true if we're already running in the requested version, false in all other cases
-$val = "$PSScriptRoot\Parts\EnsurePwshVersion.ps1"
-if(-not $val){
-    #Restart the current script as admin in the new version of pwsh
-    $psArgs = "-File $PSCommandPath"
-    Start-Process pwsh -Wait -Verb RunAs -ArgumentList $psArgs
-} else {
 
-    Import-Module "$PSScriptRoot\Modules\Reboots.psm1"
+Import-Module "$PSScriptRoot\Modules\Reboots.psm1"
 
-    #Run the parts in order
-    $ScriptsToRunInOrder = @(
-        "InstallWinget.ps1"
-        "AdoFeeds.ps1"
-        "CommonTools.ps1"
-        "RancherDesktop.ps1"
-        "GetPlatformTools.ps1"
-    )
+#Run the parts in order
+$ScriptsToRunInOrder = @(
+    "InstallWinget.ps1"
+    "AdoFeeds.ps1"
+    "CommonTools.ps1"
+    "RancherDesktop.ps1"
+    "GetPlatformTools.ps1"
+)
 
-    foreach($script in $ScriptsToRunInOrder){
+foreach($script in $ScriptsToRunInOrder){
 
-        #Run the part!
-        & "$PSScriptRoot\Parts\$script"
+    #Run the part!
+    & "$PSScriptRoot\Parts\$script"
 
-        #Is a Reboot required?
-        $reboot = IsRebootRequired
-        if($reboot){
-            #Reboot
-            Write-Host "Rebooting to continue setup.  Please log back in to continue."
-            Invoke-RebootAndContinue $PSCommandPath
-            exit
-        }
+    #Is a Reboot required?
+    $reboot = IsRebootRequired
+    if($reboot){
+        #Reboot
+        Write-Host "Rebooting to continue setup.  Please log back in to continue."
+        Invoke-RebootAndContinue $PSCommandPath
+        exit
     }
-
-    #Handoff to Lti.Ps.Platformtools from here!
-    #Install-LtiDevEnvironment
-
 }
+
+#Handoff to Lti.Ps.Platformtools from here!
+#Install-LtiDevEnvironment
 
