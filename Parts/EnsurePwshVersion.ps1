@@ -18,7 +18,9 @@ $needsInstall = $false
 if(get-command pwsh -ErrorAction SilentlyContinue){
     $installedVal = pwsh -noprofile -command "((Get-Variable PSVersionTable -ValueOnly).PSVersion -ge [semver]'$($target)')"
     $needsInstall = -not ($installedVal -eq $true)
+    Write-Host "PWSH installed, version ok: $installedVal"
 } else {
+    Write-Host "Cannot find pwsh command."
     $needsInstall = $true
 }
 
