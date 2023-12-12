@@ -1,34 +1,49 @@
-param(
-)
+#Requires -RunAsAdministrator
+
+#If we're not running as admin in pwsh, warn and exit.
+$isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if(-not $isAdmin){
+    write-host -ForegroundColor Yellow "You MUST run this script in an elevated PowerShell session.  Please re-run as administrator."
+    exit 1
+}
 
 
-
-#First, do we need to install pwsh version 7.4?
-$target = "7.4.0-rc.1"
-$pwshFile = "PowerShell-7.4.0-rc.1-win-x64.msi"
-$pwshUri = "https://github.com/PowerShell/PowerShell/releases/download/v7.4.0-rc.1/$pwshFile"
-$pwshTemp = join-path "$env:TEMP" "$pwshFile"
-
-$needsInstall = $false
-if(get-command pwsh-preview -ErrorAction SilentlyContinue){
-    $installedVal = pwsh-preview -noprofile -command "((Get-Variable PSVersionTable -ValueOnly).PSVersion -ge [semver]'$($target)')"
-    $needsInstall = -not ($installedVal -eq $true)
+#This part should return true if we're already running in the requested version, false in all other cases
+$val = "$PSScriptRoot\Parts\EnsurePwshVersion.ps1"
+if(-not $val){
+    #Restart the current script as admin in the new version of pwsh
+    $psArgs = "-File $PSCommandPath"
+    Start-Process pwsh -Wait -Verb RunAs -ArgumentList $psArgs
 } else {
-    $needsInstall = $true
+
+    Import-Module "$PSScriptRoot\Modules\Reboots.psm1"
+
+    #Run the parts in order
+    $ScriptsToRunInOrder = @(
+        "InstallWinget.ps1"
+        "AdoFeeds.ps1"
+        "CommonTools.ps1"
+        "RancherDesktop.ps1"
+        "GetPlatformTools.ps1"
+    )
+
+    foreach($script in $ScriptsToRunInOrder){
+
+        #Run the part!
+        & "$PSScriptRoot\Parts\$script"
+
+        #Is a Reboot required?
+        $reboot = IsRebootRequired
+        if($reboot){
+            #Reboot
+            Write-Host "Rebooting to continue setup.  Please log back in to continue."
+            Invoke-RebootAndContinue $PSCommandPath
+            exit
+        }
+    }
+
+    #Handoff to Lti.Ps.Platformtools from here!
+    #Install-LtiDevEnvironment
+
 }
 
-if($needsInstall){
-    #Upgrade powershell to 7.4 (rc1 at time of writing)
-    Write-Host "Installing PowerShell $target adding to path"
-
-    Invoke-WebRequest -Uri $pwshUri -OutFile $pwshTemp
-
-    $msiParams = "/i", "`"$pwshTemp`"", "/quiet", "/norestart", "REGISTER_MANIFEST=1", "USE_MU=1", "ENABLE_MU=1", "ADD_PATH=1"
-
-    $p = Start-Process msiexec.exe -Wait -ArgumentList $msiParams -NoNewWindow -PassThru
-    Write-Host "PWSH install Completed with $($p.ExitCode)"
-}
-
-#Now, run the phases as admin
-$psArgs = "-File $PSScriptRoot\RunPhase.ps1"
-Start-Process pwsh-preview -Wait -Verb RunAs -ArgumentList $psArgs
