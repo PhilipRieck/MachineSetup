@@ -4,7 +4,7 @@ $target = "7.4.0"
 if($PSVersionTable.PSVersion.ToString() -match "^7.4"){
     Write-Host "PWSH installed and up to date, and we're running in it. Going right to MachineSetup."
     & "$PSScriptRoot\MachineSetup.ps1"
-    return
+    returny
 }
 
 

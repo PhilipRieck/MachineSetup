@@ -1,4 +1,5 @@
-
+Write-Host "Running MachineSetup.ps1. Press any key to continue."
+$x = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
 
 #If we're not running as admin in pwsh, warn and exit.
 $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
