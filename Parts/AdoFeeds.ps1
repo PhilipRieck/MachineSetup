@@ -107,7 +107,7 @@ function GetAdoPatByName([string] $patName)
             $result = Invoke-WebRequest -Uri $patUrl -Method Get -Headers $authHeader -Body ($patBody | ConvertTo-Json)
             $resultVal = ($result.Content | ConvertFrom-Json)
         } catch {
-            Write-Host "Error getting PAT List: $($_.Exception.Response.StatusCode.value__)"
+            Write-Host "Error getting PAT List: $_ $($_.Exception.Response.StatusCode.value__)"
             return $null
         }
         $patPartial = $resultVal.patTokens | Where-Object { $_.displayName -eq $patName }
@@ -154,7 +154,7 @@ function UpdatePatExpiration($patInfo){
         $result = Invoke-WebRequest -Uri $patUrl -Method Post -Headers $authHeader -Body ($patBody | ConvertTo-Json)
         $resultVal = ($result.Content | ConvertFrom-Json)
     } catch {
-        Write-Host "Error updating PAT expiration:  $($_.Exception.Response.StatusCode.value__)"
+        Write-Host "Error updating PAT expiration: $_ $($_.Exception.Response.StatusCode.value__)"
         return $patInfo
     }
     $patInfo.ExpiresOn = $resultVal.patToken.validTo
@@ -179,7 +179,7 @@ function CreateAdoPat([string]$patName, [string]$patScope){
         $resultVal = ($result.Content | ConvertFrom-Json)
         Write-Host "Created PAT $patName (Expires $($resultVal.patToken.validTo))"
     } catch{
-        Write-Host "Error creating PAT:  $($_.Exception.Response.StatusCode.value__)"
+        Write-Host "Error creating PAT: $_ $($_.Exception.Response.StatusCode.value__)"
         return $null
     }
 
