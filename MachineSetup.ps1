@@ -1,15 +1,18 @@
-#Requires -RunAsAdministrator
+
 
 #If we're not running as admin in pwsh, warn and exit.
 $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if(-not $isAdmin){
     write-host -ForegroundColor Yellow "You MUST run this script in an elevated PowerShell session.  Please re-run as administrator."
+     $x = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
     exit 1
 }
 
 
 
 Import-Module "$PSScriptRoot\Modules\Reboots.psm1"
+Remove-Reboot
+
 
 #Run the parts in order
 $ScriptsToRunInOrder = @(

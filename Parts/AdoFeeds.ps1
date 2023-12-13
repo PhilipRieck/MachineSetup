@@ -55,11 +55,11 @@ function GetAdAuthHeader(){
     }
 
     # First, try to get one from the windows account broker
-    $AdToken = Get-MsalToken @connctionParams -Silent
+    $AdToken = Get-MsalToken @connctionParams -Silent -ErrorAction SilentlyContinue
 
     if($AdToken -eq $null){
         # If that fails, try to get one interactively
-        $AdToken = Get-MsalToken @connctionParams -Interactive
+        $AdToken = Get-MsalToken @connctionParams -Interactive -ErrorAction SilentlyContinue
     }
 
     if($AdToken -eq $null){
