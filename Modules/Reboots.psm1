@@ -24,7 +24,7 @@ function Invoke-RebootAndContinue([string]$scriptToRun){
     $taskAction = New-ScheduledTaskAction -Execute "pwsh.exe" -Argument "-File $fileName"
     $taskTrigger = New-ScheduledTaskTrigger -AtLogOn
     $taskPrincipal = New-ScheduledTaskPrincipal -UserId $currentUser -RunLevel Highest
-    New-ScheduledTask -Action $taskAction -Trigger $taskTrigger -TaskName $taskName -Description "MachineSetup For Lti" -RunLevel Highest -Force -Principal $taskPrincipal
+    Register-ScheduledTask -Action $taskAction -Trigger $taskTrigger -TaskName $taskName -Description "MachineSetup For Lti" -RunLevel Highest -Force -Principal $taskPrincipal
     write-host "Rebooting to continue setup.  Please log back in to continue."
     $x = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
     Restart-Computer -Force
