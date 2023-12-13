@@ -54,12 +54,20 @@ function GetAdAuthHeader(){
         Scopes = @("499b84ac-1321-427f-aa17-267ca6975798/.default")
     }
 
-    # First, try to get one from the windows account broker
-    $AdToken = Get-MsalToken @connctionParams -Silent -ErrorAction SilentlyContinue
+    try{
+        # First, try to get one from the windows account broker
+        $AdToken = Get-MsalToken @connctionParams -Silent
+    } catch {
+        $AdToken = $null
+    }
 
     if($AdToken -eq $null){
         # If that fails, try to get one interactively
-        $AdToken = Get-MsalToken @connctionParams -Interactive -ErrorAction SilentlyContinue
+        try{
+            $AdToken = Get-MsalToken @connctionParams -Interactive
+        } catch {
+            $AdToken = $null
+        }
     }
 
     if($AdToken -eq $null){

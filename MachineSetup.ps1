@@ -12,7 +12,7 @@ if(-not $isAdmin){
 
 
 Import-Module "$PSScriptRoot\Modules\Reboots.psm1"
-Remove-Reboot
+#Remove-Reboot
 
 
 #Run the parts in order
