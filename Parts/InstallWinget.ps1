@@ -15,7 +15,7 @@ function installWinget(){
     Add-AppxPackage "$env:TEMP\Microsoft.VCLibs.x64.14.00.Desktop.appx" -ErrorAction SilentlyContinue -ProgressAction SilentlyContinue
     Add-AppxPackage "$env:TEMP\Microsoft.UI.Xaml.2.7.x64.appx" -ErrorAction SilentlyContinue -ProgressAction SilentlyContinue
     get-process | where {$_.Name -match "WindowsPackageManager"} | stop-process -Force
-    Add-AppxPackage "$env:TEMP\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -ErrorAction SilentlyContinue -ProgressAction SilentlyContinue
+    Add-AppxPackage "$env:TEMP\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -ProgressAction SilentlyContinue
 
     $Global:ProgressPreference = $pref
 }
