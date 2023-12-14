@@ -11,7 +11,7 @@ write-host "Checking for SecretStore module"
 $module = Get-InstalledPsResource Microsoft.PowerShell.SecretStore -ErrorAction Ignore
 if($module -eq $null){
     write-host "SecretStore [$module]. Installing."
-    Install-PSResource Microsoft.PowerShell.SecretStore -TrustRepository -Force
+    Install-PSResource Microsoft.PowerShell.SecretStore -TrustRepository -Confirm:$false
     Set-SecretStoreConfiguration -Authentication None -Interaction None -Confirm:$false
 }
 

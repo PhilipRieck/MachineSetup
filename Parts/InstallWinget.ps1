@@ -4,6 +4,9 @@ $desiredModuleVersion = [semver]"1.6.3133"
 
 function installWinget(){
     write-host "Installing winget $desiredVersion"
+
+    $pref = $Global:ProgressPreference
+    $Global:ProgressPreference = "SilentlyContinue"
     #Update winget to preview version
     Invoke-WebRequest -Uri "https://github.com/microsoft/winget-cli/releases/download/v$($desiredVersion)/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile "$env:TEMP\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -ProgressAction SilentlyContinue
     Invoke-WebRequest -Uri "https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx" -OutFile "$env:TEMP\Microsoft.VCLibs.x64.14.00.Desktop.appx" -ProgressAction SilentlyContinue
@@ -12,6 +15,8 @@ function installWinget(){
     Add-AppxPackage "$env:TEMP\Microsoft.VCLibs.x64.14.00.Desktop.appx" -ErrorAction SilentlyContinue
     Add-AppxPackage "$env:TEMP\Microsoft.UI.Xaml.2.7.x64.appx" -ErrorAction SilentlyContinue
     Add-AppxPackage "$env:TEMP\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -ErrorAction SilentlyContinue
+
+    $Global:ProgressPreference = $pref
 }
 
 
