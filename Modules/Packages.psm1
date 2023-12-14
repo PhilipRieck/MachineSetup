@@ -1,5 +1,5 @@
 
-function EnsureWingetPackage([string]$packageId, [semver]$minimumVersion, [scriptblock]$configureCallback){
+function EnsureWingetPackage([string]$packageId, [string]$minimumVersion){
 
     $package = Get-WingetPackage $packageId
     if($package -eq $null){
