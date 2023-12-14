@@ -5,6 +5,9 @@ if($module -eq $null){
     write-host "Secretmanagement [$module]. Installing."
     Install-PSResource Microsoft.PowerShell.SecretManagement, Microsoft.PowerShell.SecretStore -TrustRepository `
         -Repository PSGallery -Confirm:$false -SkipDependencyCheck -Quiet
+
+    write-host "Setting Secretstore interaction settings."
+    Set-SecretStoreConfiguration -Authentication None -Interaction None -Confirm:$false -Password (ConvertTo-SecureString "LtiSecrets" -AsPlainText -Force)
 }
 
 write-host "Checking for SecretStore module"
@@ -12,11 +15,10 @@ $module = Get-InstalledPsResource Microsoft.PowerShell.SecretStore -ErrorAction 
 if($module -eq $null){
     write-host "SecretStore [$module]. Installing."
     Install-PSResource Microsoft.PowerShell.SecretStore -TrustRepository -Confirm:$false -SkipDependencyCheck -Quiet
-}
 
-#Allow getting secrets from LtiSecrets vault without prompting.  This is a huge pain.
-write-host "Setting Secretstore interaction settings."
-Set-SecretStoreConfiguration -Authentication None -Interaction None -Confirm:$false
+    write-host "Setting Secretstore interaction settings."
+    Set-SecretStoreConfiguration -Authentication None -Interaction None -Confirm:$false -Password (ConvertTo-SecureString "LtiSecrets" -AsPlainText -Force)
+}
 
 
 write-host "Checking for LtiSecrets vault"
