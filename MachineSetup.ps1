@@ -1,6 +1,3 @@
-Write-Host "Running MachineSetup.ps1. Press any key to continue."
-$x = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
-
 #If we're not running as admin in pwsh, warn and exit.
 $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if(-not $isAdmin){
@@ -9,10 +6,13 @@ if(-not $isAdmin){
     exit 1
 }
 
+Import-Module "$PSScriptRoot\Modules\Registry.psm1"
 
+# We're going to disable UAC prompts with this - otherwise this script is super annoying
+Set-RegistryValue -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Data 0 -Type DWord > $null
 
 Import-Module "$PSScriptRoot\Modules\Reboots.psm1"
-#Remove-Reboot
+Remove-Reboot
 
 
 #Run the parts in order
@@ -25,6 +25,7 @@ $ScriptsToRunInOrder = @(
 )
 
 foreach($script in $ScriptsToRunInOrder){
+
 
     #Run the part!
     & "$PSScriptRoot\Parts\$script"

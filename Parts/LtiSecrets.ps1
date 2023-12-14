@@ -6,11 +6,11 @@ if($module -eq $null){
 $module = Get-InstalledPsResource Microsoft.PowerShell.SecretStore -ErrorAction Ignore
 if($module -eq $null){
     Install-PSResource Microsoft.PowerShell.SecretStore -TrustRepository
+    Set-SecretStoreConfiguration -Authentication None -Interaction None
 }
 
 $vault = Get-SecretVault -Name LtiSecrets -ErrorAction Ignore
 if($vault -eq $null){
-    Set-SecretStoreConfiguration -Authentication None -Interaction None
     Register-SecretVault -Name LtiSecrets -ModuleName Microsoft.PowerShell.SecretStore
 }
 

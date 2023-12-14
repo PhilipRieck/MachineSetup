@@ -4,7 +4,7 @@ $target = "7.4.0"
 if($PSVersionTable.PSVersion.ToString() -match "^7.4"){
     Write-Host "PWSH installed and up to date, and we're running in it. Going right to MachineSetup."
     & "$PSScriptRoot\MachineSetup.ps1"
-    returny
+    exit 0
 }
 
 
@@ -13,9 +13,7 @@ $pwshUri = "https://github.com/PowerShell/PowerShell/releases/download/v$target/
 $pwshTemp = join-path "$env:TEMP" "$pwshFile"
 
 $needsInstall = $false
-$cmd = get-command pwsh -ErrorAction SilentlyContinue
 
-$needsInstall = $false
 if(get-command pwsh -ErrorAction SilentlyContinue){
     $installedVal = pwsh -noprofile -command "((Get-Variable PSVersionTable -ValueOnly).PSVersion -ge [semver]'$($target)')"
     $needsInstall = -not ($installedVal -eq $true)
