@@ -20,8 +20,8 @@ $minimumVersion = [semver]"1.10.0"
 
 #Rancher desktop requires WSL
 #Install WSL if required
-$wslState = (Get-WindowsOptionalFeature -FeatureName "Microsoft-Windows-Subsystem-Linux" -Online | Select-Object -ExpandProperty State)
-if($wslState -ne "Enabled"){
+$wslinfo = wsl -l -q
+if($wslinfo -notmatch "^Ubuntu"){
     Write-Host "`tWSL not installed. Enabling WSL (may require a reboot)"
     bcdedit /set hypervisorlaunchtype auto
     wsl --install --no-launch

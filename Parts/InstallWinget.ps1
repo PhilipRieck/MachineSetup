@@ -12,10 +12,10 @@ function installWinget(){
     Invoke-WebRequest -Uri "https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx" -OutFile "$env:TEMP\Microsoft.VCLibs.x64.14.00.Desktop.appx" -ProgressAction SilentlyContinue
     Invoke-WebRequest -Uri "https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx" -OutFile "$env:TEMP\Microsoft.UI.Xaml.2.7.x64.appx" -ProgressAction SilentlyContinue
 
-    Add-AppxPackage "$env:TEMP\Microsoft.VCLibs.x64.14.00.Desktop.appx" -ErrorAction SilentlyContinue -ProgressAction SilentlyContinue
-    Add-AppxPackage "$env:TEMP\Microsoft.UI.Xaml.2.7.x64.appx" -ErrorAction SilentlyContinue -ProgressAction SilentlyContinue
+    Add-AppxPackage "$env:TEMP\Microsoft.VCLibs.x64.14.00.Desktop.appx"
+    Add-AppxPackage "$env:TEMP\Microsoft.UI.Xaml.2.7.x64.appx"
     get-process | where {$_.Name -match "WindowsPackageManager"} | stop-process -Force
-    Add-AppxPackage "$env:TEMP\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -ProgressAction SilentlyContinue
+    Add-AppxPackage "$env:TEMP\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
 
     $Global:ProgressPreference = $pref
 }
