@@ -6,7 +6,7 @@ function EnsureWingetPackage([string]$packageId, [semver]$minimumVersion, [scrip
         write-host "`tInstalling $packageId via winget"
         winget install -e --id $packageId --source winget
         return 2
-    } elseif ([semver]$package.InstalledVersion -lt $minimumVersion){
+    } elseif ($package.CompareToVersion($minimumVersion) -eq "Lesser"){
         write-host "`tUpgrading $packageId via winget"
         winget upgrade --id $packageId --source winget
         return 1
