@@ -3,7 +3,7 @@ $desiredVersion = [semver]"1.7.3172-preview"
 $desiredModuleVersion = [semver]"1.6.3133"
 
 function installWinget(){
-    write-host "`t$($PSScript.Name): Installing winget $desiredVersion"
+    write-host "`tInstalling winget $desiredVersion"
 
     $pref = $Global:ProgressPreference
     $Global:ProgressPreference = "SilentlyContinue"
@@ -24,7 +24,7 @@ $winget = get-command winget -ErrorAction Ignore
 if($winget){
     $wingetVersion = [semver]((winget --version).substring(1))
     if($wingetVersion -ge [semver]$desiredVersion){
-        write-host "t$($PSScript.Name): Winget already installed and up to date."
+        write-host "`tWinget already installed and up to date."
     } else {
         InstallWinget
     }
@@ -34,9 +34,9 @@ if($winget){
 
 $module = Get-InstalledPsResource Microsoft.WinGet.Client -ErrorAction Ignore
 if(($module -eq $null) -or ([semver]$module.Version -lt $desiredModuleVersion)){
-    write-host "t$($PSScript.Name): Installing winget powershell module"
+    write-host "`tInstalling winget powershell module"
     Install-PSResource Microsoft.WinGet.Client -TrustRepository
     Uninstall-PSResource Microsoft.WinGet.Client -Version "(, $desiredModuleVersion)"
 } else {
-    write-host "t$($PSScript.Name): Winget powershell module up to date."
+    write-host "`tWinget powershell module up to date."
 }

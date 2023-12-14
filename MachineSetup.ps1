@@ -27,6 +27,7 @@ $ScriptsToRunInOrder = @(
 
 foreach($script in $ScriptsToRunInOrder){
 
+    write-Host "MachineSetup: Running $script"
 
     #Run the part!
     & "$PSScriptRoot\Parts\$script"
@@ -35,7 +36,6 @@ foreach($script in $ScriptsToRunInOrder){
     $reboot = IsRebootRequired
     if($reboot){
         #Reboot
-        Write-Host "Rebooting to continue setup.  Please log back in to continue."
         Invoke-RebootAndContinue $PSCommandPath
         exit
     }

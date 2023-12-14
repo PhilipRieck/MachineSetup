@@ -3,7 +3,7 @@
 $module = Find-PSResource -Name Lti.Ps.PlatformTools -Repository vNext -ErrorAction Ignore
 
 if($module -eq $null){
-    Write-Host "Unable to find latest version of Lti.Ps.PlatformTools in vNext repository. Unable to continue."
+    Write-Host -ForegroundColor Yellow "Unable to find latest version of Lti.Ps.PlatformTools in vNext repository. Unable to continue."
     exit 1
 }
 
@@ -17,11 +17,11 @@ catch{
 
 
 if(($currentVersion -eq $null -or ($latestVersion -gt $currentVersion)){
-    Write-Host "Installing Lti.Ps.PlatformTools $latestVersion"
+    Write-Host "`tInstalling Lti.Ps.PlatformTools $latestVersion"
     Install-PSResource Lti.Ps.PlatformTools -Repository vNext -Force
 
     if($currentVersion -ne $null){
-        Write-Host "Removing old versions of Lti.Ps.PlatformTools"
+        Write-Host "`tRemoving old versions of Lti.Ps.PlatformTools"
         Uninstall-PSResource Lti.Ps.PlatformTools -Version "(,$latestVersion)" -Force
     }
 }

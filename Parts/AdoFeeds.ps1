@@ -14,7 +14,7 @@ $currentAuthHeader = $null
 # We'll need to get the user to auth to Azure AD to get a token for the PAT creation
 $module = Get-PsResource MSAL.PS -ErrorAction Ignore
 if($module -eq $null){
-    Install-PSResource MSAL.PS -TrustRepository -Repository PSGallery -Confirm:$false -Quiet
+    Install-PSResource MSAL.PS -TrustRepository -Repository PSGallery -Confirm:$false -Quiet -WarningAction SilentlyContinue 3>$null
 }
 
 
@@ -72,7 +72,7 @@ function GetAdAuthHeader(){
 
     if($AdToken -eq $null){
         # If that fails, we're done.
-        Write-Host "Unable to get AAD token via MSAL.  Exiting."
+        Write-Host -ForegroundColor Yellow "Unable to get AAD token via MSAL.  Exiting."
         exit 1
     }
 
@@ -94,7 +94,7 @@ function RevokePat([string]$authorizationId){
         $result = Invoke-WebRequest -Uri $patUrl -Method Delete -Headers $authHeader -Body ($patBody | ConvertTo-Json)
     }
     catch{
-        Write-Host "Error revoking PAT:  $($_.Exception.Response.StatusCode.value__)"
+        Write-Host -ForegroundColor Yellow "Error revoking PAT:  $($_.Exception.Response.StatusCode.value__)"
     }
 }
 
@@ -115,7 +115,7 @@ function GetAdoPatByName([string] $patName)
             $result = Invoke-WebRequest -Uri $patUrl -Method Get -Headers $authHeader -Body ($patBody | ConvertTo-Json)
             $resultVal = ($result.Content | ConvertFrom-Json)
         } catch {
-            Write-Host "Error getting PAT List: $_ $($_.Exception.Response.StatusCode.value__)"
+            Write-Host -ForegroundColor Yellow "Error getting PAT List: $_ $($_.Exception.Response.StatusCode.value__)"
             return $null
         }
         $patPartial = $resultVal.patTokens | Where-Object { $_.displayName -eq $patName }
@@ -185,9 +185,9 @@ function CreateAdoPat([string]$patName, [string]$patScope){
         $authHeader = GetAdAuthHeader
         $result = Invoke-WebRequest -Uri $patUrl -Method Post -Headers $authHeader -Body ($patBody | ConvertTo-Json)
         $resultVal = ($result.Content | ConvertFrom-Json)
-        Write-Host "Created PAT $patName (Expires $($resultVal.patToken.validTo))"
+        Write-Host "`tCreated PAT $patName (Expires $($resultVal.patToken.validTo))"
     } catch{
-        Write-Host "Error creating PAT: $_ $($_.Exception.Response.StatusCode.value__)"
+        Write-Host -ForegroundColor Yellow "Error creating PAT: $_ $($_.Exception.Response.StatusCode.value__)"
         return $null
     }
 
@@ -206,37 +206,37 @@ function CreateAdoPat([string]$patName, [string]$patScope){
 function EnsureOnePat([string]$patName, [string]$patScope, [Boolean]$force = $false){
 
     if($force){
-        Write-Host "Force specified.  Regenerating PAT $patName."
+        Write-Host "`tForce specified.  Regenerating PAT $patName."
         RegeneratePat $patName $patScope
         return
     }
 
     $patInfo = GetSavedPatInfo $patName
     if($patInfo -eq $null){
-        Write-Host "Locally saved PAT info is missing. Regenerating PAT"
+        Write-Host "`tLocally saved PAT info is missing. Regenerating PAT"
         RegeneratePat $patName $patScope
         return
     }
 
     if($patInfo.Token -eq $null){
-        Write-Host "Locally saved PAT info is missing token info. Regenerating PAT"
+        Write-Host "`tLocally saved PAT info is missing token info. Regenerating PAT"
         RegeneratePat $patName $patScope
         return
     }
 
     if($patInfo.AuthorizationId -eq $null){
-        Write-Host "Locally saved PAT info is missing authorizationId. Regenerating PAT"
+        Write-Host "`tLocally saved PAT info is missing authorizationId. Regenerating PAT"
         RegeneratePat $patName $patScope
         return
     }
 
     if(($patInfo.ExpiresOn -eq $null) -or ($patInfo.ExpiresOn -lt (Get-Date).AddDays(30))){
-        Write-Host "Locally saved PAT info expiration is within 30 days. Updating PAT Expiration"
+        Write-Host "`tLocally saved PAT info expiration is within 30 days. Updating PAT Expiration"
         UpdatePatExpiration $patInfo
         return
     }
 
-    write-host "ADO PAT $patName is valid.  No action needed."
+    write-host "`tADO PAT $patName is valid.  No action needed."
 }
 
 #debugging
@@ -265,7 +265,7 @@ function debugPat([string]$patName){
 
 
 function AddFeedCredentialsToVault($patInfo){
-    write-host "Updating feed credentials in vault $vaultName for $feedcredentialName"
+    write-host "`tUpdating feed credentials in vault $vaultName for $feedcredentialName"
     $secureToken = ($patInfo.Token | ConvertTo-SecureString -AsPlainText -Force)
     $credential = (new-object System.Management.Automation.PSCredential("adouser", $secureToken))
     Set-Secret -Vault $vaultName -Name $feedcredentialName -Secret $credential
@@ -275,13 +275,13 @@ function RegisterAdoFeedAsPSRepo($force = $false){
     $repo = get-PSResourceRepository vNext -ErrorAction Ignore
     if($repo){
         if(-not $force){
-            write-host "vNext repo already registered, no action needed."
+            write-host "`tvNext repo already registered, no action needed."
             return
         }
-        write-host "Unregistering vNext repo."
+        write-host "`tUnregistering vNext repo."
         Unregister-PSResourceRepository vNext
     }
-    write-host "Registering vNext repo with credentials in $vaultName for $feedcredentialName"
+    write-host "`tRegistering vNext repo with credentials in $vaultName for $feedcredentialName"
     $params = @{
         Name = 'vNext'
         Uri = 'https://pkgs.dev.azure.com/LTiSolutions/d94bf40a-c115-4699-a8d0-be9e02025ef2/_packaging/lti-tools-feed/nuget/v3/index.json'
