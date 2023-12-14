@@ -3,7 +3,7 @@ $desiredVersion = [semver]"1.7.3172-preview"
 $desiredModuleVersion = [semver]"1.6.3133"
 
 function installWinget(){
-    write-host "Installing winget $desiredVersion"
+    write-host "`t$($PSScript.Name): Installing winget $desiredVersion"
 
     $pref = $Global:ProgressPreference
     $Global:ProgressPreference = "SilentlyContinue"
@@ -12,9 +12,9 @@ function installWinget(){
     Invoke-WebRequest -Uri "https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx" -OutFile "$env:TEMP\Microsoft.VCLibs.x64.14.00.Desktop.appx" -ProgressAction SilentlyContinue
     Invoke-WebRequest -Uri "https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx" -OutFile "$env:TEMP\Microsoft.UI.Xaml.2.7.x64.appx" -ProgressAction SilentlyContinue
 
-    Add-AppxPackage "$env:TEMP\Microsoft.VCLibs.x64.14.00.Desktop.appx" -ErrorAction SilentlyContinue
-    Add-AppxPackage "$env:TEMP\Microsoft.UI.Xaml.2.7.x64.appx" -ErrorAction SilentlyContinue
-    Add-AppxPackage "$env:TEMP\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -ErrorAction SilentlyContinue
+    Add-AppxPackage "$env:TEMP\Microsoft.VCLibs.x64.14.00.Desktop.appx" -ErrorAction SilentlyContinue -ProgressAction SilentlyContinue
+    Add-AppxPackage "$env:TEMP\Microsoft.UI.Xaml.2.7.x64.appx" -ErrorAction SilentlyContinue -ProgressAction SilentlyContinue
+    Add-AppxPackage "$env:TEMP\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -ErrorAction SilentlyContinue -ProgressAction SilentlyContinue
 
     $Global:ProgressPreference = $pref
 }
@@ -24,7 +24,7 @@ $winget = get-command winget -ErrorAction Ignore
 if($winget){
     $wingetVersion = [semver]((winget --version).substring(1))
     if($wingetVersion -ge [semver]$desiredVersion){
-        write-host "Winget already installed and up to date."
+        write-host "t$($PSScript.Name): Winget already installed and up to date."
     } else {
         InstallWinget
     }
@@ -34,10 +34,9 @@ if($winget){
 
 $module = Get-InstalledPsResource Microsoft.WinGet.Client -ErrorAction Ignore
 if(($module -eq $null) -or ([semver]$module.Version -lt $desiredModuleVersion)){
-    write-host "Installing winget powershell module"
+    write-host "t$($PSScript.Name): Installing winget powershell module"
     Install-PSResource Microsoft.WinGet.Client -TrustRepository
-    write-host "Removing old winget powershell modules"
     Uninstall-PSResource Microsoft.WinGet.Client -Version "(, $desiredModuleVersion)"
 } else {
-    write-host "Winget powershell module up to date."
+    write-host "t$($PSScript.Name): Winget powershell module up to date."
 }

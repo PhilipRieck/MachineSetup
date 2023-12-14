@@ -18,6 +18,7 @@ Remove-Reboot
 #Run the parts in order
 $ScriptsToRunInOrder = @(
     "InstallWinget.ps1"
+    "InstallDotnet8.ps1"
     "AdoFeeds.ps1"
     "CommonTools.ps1"
     "RancherDesktop.ps1"

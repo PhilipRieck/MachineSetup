@@ -14,7 +14,7 @@ $currentAuthHeader = $null
 # We'll need to get the user to auth to Azure AD to get a token for the PAT creation
 $module = Get-PsResource MSAL.PS -ErrorAction Ignore
 if($module -eq $null){
-    Install-PSResource MSAL.PS -TrustRepository
+    Install-PSResource MSAL.PS -TrustRepository -Repository PSGallery -Confirm:$false -Quiet
 }
 
 
